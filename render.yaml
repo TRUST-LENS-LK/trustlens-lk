@@ -9,12 +9,3 @@ services:
         value: production
       - key: SCANNER_URL
         value: http://trustlens-scanner:8788
-      
-  - type: web
-    name: trustlens-scanner
-    env: docker
-    dockerfilePath: services/scanner/Dockerfile
-    dockerContext: services/scanner
-    envVars:
-      - key: PORT
-        value: 8788
