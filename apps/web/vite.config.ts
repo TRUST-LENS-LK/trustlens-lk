@@ -8,4 +8,7 @@ export default defineConfig({
   server: {
     port: 5174,
   },
+  build: {
+    cssMinify: 'esbuild', // avoid lightningcss native binary issues on Linux CI
+  },
 })
