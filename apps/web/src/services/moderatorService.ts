@@ -155,7 +155,7 @@ export interface ModerationStatsResponse {
 
 const TOKEN_KEY = 'trustlens_mod_token'
 const USER_KEY = 'trustlens_mod_user'
-const API_BASE = 'http://localhost:8787'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8787'
 
 export async function fetchIndicatorIntelligenceContext(
   token: string,

@@ -79,7 +79,8 @@ export async function submitUserReport(payload: SubmitReportPayload): Promise<Su
   }
 
   try {
-    const response = await fetch('http://localhost:8787/api/reports', {
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+    const response = await fetch(`${API_URL}/api/reports`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
