@@ -37,6 +37,7 @@ import {
   verifyAuditChainIntegrity,
   recordAuditLog,
   getIndicatorIntelligenceContext,
+  clearAllAuditLogs,
 } from './services/reportingService.mjs'
 import { reconcileDecision } from './services/reconcileIntelligence.mjs'
 import { applyAiVerdict, evaluateContextWithAi, isAiValidationConfigured, generateOverallSummaryWithAi } from './services/aiContextValidator.mjs'
@@ -342,6 +343,7 @@ const server = createServer(async (req, res) => {
     '/api/moderation/seed-demo',
     '/api/moderation/clear-demo',
     '/api/moderation/audit-logs/purge',
+    '/api/moderation/audit-logs/clear-all',
     '/api/moderation/domains',
     '/api/moderation/intelligence',
   ]
@@ -500,7 +502,21 @@ const server = createServer(async (req, res) => {
     }
   }
 
-  // Route: POST /api/moderation/seed-demo (Protected Demo Seed)
+  // Route: POST /api/moderation/audit-logs/clear-all (Protected — Full Audit Reset)
+  if (pathname === '/api/moderation/audit-logs/clear-all') {
+    const auth = await authorizeModerator(req)
+    if (!auth.authorized) {
+      return send(res, 401, { code: 'UNAUTHORIZED', message: auth.error || 'Moderator access required.', requestId }, requestId)
+    }
+    try {
+      const result = await clearAllAuditLogs()
+      return send(res, 200, { success: true, ...result, requestId }, requestId)
+    } catch (error) {
+      return send(res, 502, { code: 'CLEAR_ALL_FAILED', message: error.message, requestId }, requestId)
+    }
+  }
+
+
   if (pathname === '/api/moderation/seed-demo') {
     const auth = await authorizeModerator(req)
     if (!auth.authorized) {
